@@ -15,7 +15,7 @@ app.use(express.static(path.join(__dirname, 'client', 'build')));
 // PostgreSQL
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
-  ssl: { rejectUnauthorized: false },
+  ssl: process.env.DATABASE_URL && process.env.DATABASE_URL.includes("sslmode=disable") ? false : { rejectUnauthorized: false },
 });
 
 async function initDB() {
@@ -31,7 +31,7 @@ async function initDB() {
     `);
     console.log('✅ БД готова');
   } catch (err) {
-    console.error('❌ Ошибка БД:', err.message);
+    console.error('❌ Ошибка БД полная:', JSON.stringify(err), err.message, err.code);
   }
 }
 
