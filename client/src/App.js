@@ -23,7 +23,14 @@ export default function App() {
   useEffect(() => {
     fetch(`${API}/tasks`)
       .then(r => r.json())
-      .then(data => { setTasks(data); setLoading(false); })
+      .then(data => {
+        if (Array.isArray(data)) {
+          setTasks(data);
+        } else {
+          setError("Ошибка сервера: " + (data.error || JSON.stringify(data)));
+        }
+        setLoading(false);
+      })
       .catch(() => { setError("Не удалось подключиться к серверу"); setLoading(false); });
   }, []);
 
